@@ -1,0 +1,13 @@
+.authenticate__register {
+  color: white;
+  margin: 30px auto 0;
+  font-size: 14px;
+}
+
+@media screen and (min-width: 320px) and (max-width: 898px) {
+  .authenticate__register {
+    width: 260px;
+    font-size: 12px;
+    text-align: center;
+  }
+}

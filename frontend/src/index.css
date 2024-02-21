@@ -1,0 +1,100 @@
+@import url(./vendor/normalize.css);
+@import url(./fonts/fonts.css);
+@import url(./blocks/page/page.css);
+@import url(./blocks/header/header.css);
+@import url(./blocks/header/_menu-open/header_menu-open.css);
+@import url(./blocks/header/__logo-header/header__logo-header.css);
+@import url(./blocks/header/__logo-header/_size/header__logo-header_size.css);
+@import url(./blocks/header/__close-btn/header__close-btn.css);
+@import url(./blocks/header/__nav-bar/header__nav-bar.css);
+@import url(./blocks/header/__email/header__email.css);
+@import url(./blocks/header/__sign-out/header__sign-out.css);
+@import url(./blocks/header/__divider-menu/header__divider-menu.css);
+@import url(./blocks/header/__menu/header__menu.css);
+@import url(./blocks/divider-section/divider-section.css);
+@import url(./blocks/content/content.css);
+@import url(./blocks/profile/profile.css);
+@import url(./blocks/profile/__image/profile__image.css);
+@import url(./blocks/profile/__overlay-edit/profile__overlay-edit.css);
+@import url(./blocks/profile/__btn-edit-photo/profile__btn-edit-photo.css);
+@import url(./blocks/profile/__info/profile__info.css);
+@import url(./blocks/profile/__info-edit-btn/profile__info-edit-btn.css);
+@import url(./blocks/profile/__info-icon-edit/profile__info-icon.css);
+@import url(./blocks/profile/__info-name/profile__info-name.css);
+@import url(./blocks/profile/__info-about/profile__info-about.css);
+@import url(./blocks/profile/__add-btn/profile__add-btn.css);
+@import url(./blocks/profile/__add-btn-image/profile__add-btn-image.css);
+
+@import url(./blocks/authenticate/authenticate.css);
+@import url(./blocks/authenticate/__btn/authenticate__btn.css);
+@import url(./blocks/authenticate/__form/authenticate__form.css);
+@import url(./blocks/authenticate/__input/authenticate__input.css);
+@import url(./blocks/authenticate/__register/authenticate__register.css);
+
+@import url(./blocks/link/link.css);
+@import url(./blocks/link/__auth/link__auth.css);
+@import url(./blocks/link/__auth/_size/link__auth_size.css);
+
+@import url(./blocks/inactive/inactive.css);
+
+@import url(./blocks/card-elements/card-elements.css);
+@import url(./blocks/card-elements/__container/card-elements__container.css);
+@import url(./blocks/card-elements/__container-btn-delete/card-elements__container-btn-delete.css);
+@import url(./blocks/card-elements/__container-icon-delete/card-elements__container-icon-delete.css);
+@import url(./blocks/card-elements/__container-image/card-elements__container-image.css);
+@import url(./blocks/card-elements/__container-footing/card-elements__container-footing.css);
+@import url(./blocks/card-elements/__container-footing-title/card-elements__container-footing-title.css);
+@import url(./blocks/card-elements/__container-footing-btn/card-elements__container-footing-btn.css);
+@import url(./blocks/card-elements/__container-footing-btn/_active/card-elements__container-footing-btn_active.css);
+@import url(./blocks/card-elements/__container-footing-btn/_inactive/card-elements__container-footing-btn_inactive.css);
+@import url(./blocks/card-elements/__like-counter/card-elements__like-counter.css);
+
+@import url(./blocks/footer/footer.css);
+@import url(./blocks/footer/__copyright/footer__copyright.css);
+@import url(./blocks/popup/popup.css);
+@import url(./blocks/open/open.css);
+
+@import url(./blocks/access/access.css);
+@import url(./blocks/denied/denied.css);
+
+@import url(./blocks/modal-window/__container/modal-window__container.css);
+@import url(./blocks/modal-window/__overlay/modal-window__overlay.css);
+@import url(./blocks/modal-window/__btn-close/modal-window__btn-close.css);
+@import url(./blocks/modal-window/__modal-title/modal-window__modal-title.css);
+@import url(./blocks/modal-window/__btn-delete/modal-window__btn-delete.css);
+@import url(./blocks/modal-window/__change-image/modal-window__change-image.css);
+@import url(./blocks/modal-window/__close-change/modal-window__close-change.css);
+@import url(./blocks/modal-window/__form-change-image/modal-window__form-change-image.css);
+@import url(./blocks/modal-window/__title-change/modal-window__title-change.css);
+@import url(./blocks/modal-window/__fiel-change-image/modal-window__fiel-change-image.css);
+@import url(./blocks/modal-window/__input-url-change/modal-window__input-url-change.css);
+@import url(./blocks/modal-window/__keep-btn/modal-window__keep-btn.css);
+@import url(./blocks/popup/__overlay/popup__overlay.css);
+
+@import url(./blocks/title/title.css);
+@import url(./blocks/title/_justify/title_justify.css);
+
+@import url(./blocks/popup/__container/popup__container.css);
+@import url(./blocks/popup/__container-close-popup/popup__container-close-popup.css);
+@import url(./blocks/popup/__container-close-popup/_position/popup__container-close-popup_position.css);
+@import url(./blocks/popup/__container-close-icon/popup__container-close-icon.css);
+@import url(./blocks/popup/__container-text/popup__container-text.css);
+@import url(./blocks/popup/__container-form/popup__container-form.css);
+@import url(./blocks/popup/__container-input/popup__container-input.css);
+@import url(./blocks/popup/__container-input/_type/_error/popup__container-input_type_error.css);
+@import url(./blocks/popup/__input-error/popup__input-error.css);
+@import url(./blocks/popup/__input-error/_active/popup__input-error_active.css);
+@import url(./blocks/popup/__container-save-btn/popup__container-save-btn.css);
+@import url(./blocks/popup/__container-save-btn/_inactive/popup__container-save-btn_inactive.css);
+@import url(./blocks/name-error/name-error.css);
+@import url(./blocks/about-me-error/about-me-error.css);
+@import url(./blocks/title-place-error/title-place-error.css);
+@import url(./blocks/url-change-error/url-change-error.css);
+@import url(./blocks/new-image-error/new-image-error.css);
+@import url(./blocks/modal/modal.css);
+@import url(./blocks/modal/__overlay.css);
+@import url(./blocks/modal/__container/modal__container.css);
+@import url(./blocks/modal/__container-close/modal__container-close.css);
+@import url(./blocks/modal/__image-card/modal__image-card.css);
+@import url(./blocks/modal/__title-text/modal__title-text.css);
+@import url(./blocks/modal-window/modal-window.css);

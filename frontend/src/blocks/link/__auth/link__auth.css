@@ -1,0 +1,17 @@
+.link__auth {
+  color: white;
+  font-size: 18px;
+  font-weight: 400;
+  text-align: right;
+  line-height: 22px;
+}
+
+@media screen and (min-width: 320px) and (max-width: 898px) {
+  .link__auth {
+    color: white;
+    font-size: 14px;
+    width: 68px;
+    margin-top: 40px;
+    margin-right: 20px;
+  }
+}

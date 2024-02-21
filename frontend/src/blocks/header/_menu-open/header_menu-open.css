@@ -1,0 +1,7 @@
+@media screen and (min-width: 320px) and (max-width: 898px) {
+  .header_menu-open {
+    visibility: visible;
+    margin-top: 20%;
+    align-items: center;
+  }
+}

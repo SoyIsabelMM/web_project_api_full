@@ -1,0 +1,14 @@
+.authenticate {
+  width: 500px;
+  height: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 100px auto 0;
+}
+
+@media screen and (min-width: 320px) and (max-width: 898px) {
+  .authenticate {
+    width: 320px;
+  }
+}
