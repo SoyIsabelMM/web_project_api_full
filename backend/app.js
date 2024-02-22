@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const usersRoute = require('./routes/users');
 const cardsRoute = require('./routes/cards');
 
+const { login, createUser } = require('./controllers/users');
+
 const { PORT = 3000 } = process.env;
 
 const app = express();
@@ -19,7 +21,11 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/', usersRoute, cardsRoute);
+app.post('/signin', login);
+app.post('/signup', createUser);
+
+app.use('/', usersRoute);
+app.use('/', cardsRoute);
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Recurso solicitado no encontrado' });
