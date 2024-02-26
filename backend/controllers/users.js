@@ -107,6 +107,16 @@ module.exports.login = async (req, res) => {
   }
 };
 
+module.exports.getCurrentUser = async (req, res) => {
+  try {
+    const user = req.user;
+
+    return res.json(user);
+  } catch (err) {
+    res.status(SERVER_ERROR).json({ message: 'Error interno del servidor' });
+  }
+};
+
 module.exports.updateUserProfile = async (req, res) => {
   const id = req.user._id;
 

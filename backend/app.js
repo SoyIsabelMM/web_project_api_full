@@ -5,6 +5,7 @@ const usersRoute = require('./routes/users');
 const cardsRoute = require('./routes/cards');
 
 const { login, createUser } = require('./controllers/users');
+// const auth = require('./middlewares/auth');
 
 const { PORT = 3000 } = process.env;
 
@@ -24,8 +25,10 @@ app.use((req, res, next) => {
 app.post('/signin', login);
 app.post('/signup', createUser);
 
-app.use('/', usersRoute);
+// app.use(auth);
+
 app.use('/', cardsRoute);
+app.use('/', usersRoute);
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Recurso solicitado no encontrado' });

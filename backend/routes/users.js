@@ -4,10 +4,11 @@ const {
   getUserById,
   updateUserProfile,
   updateAvatarProfile,
+  getCurrentUser,
 } = require('../controllers/users');
-const mongoose = require('mongoose');
 
 router.get('/users', getUsers);
+router.get('/users/me', getCurrentUser);
 router.get('/users/:_id', getUserById);
 router.patch('/users/me', updateUserProfile);
 router.patch('/users/me/avatar', updateAvatarProfile);
