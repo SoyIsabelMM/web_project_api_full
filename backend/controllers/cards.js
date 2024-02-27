@@ -1,6 +1,6 @@
 const { default: mongoose } = require('mongoose');
 const Cards = require('../models/card');
-const { ERROR_CODE, NOT_FOUND, SERVER_ERROR } = require('../utils/constants');
+const { NOT_FOUND, SERVER_ERROR, FORBIDDEN } = require('../utils/constants');
 
 module.exports.getCards = async (req, res) => {
   try {
@@ -17,12 +17,12 @@ module.exports.getCards = async (req, res) => {
 
 module.exports.createCard = async (req, res) => {
   const { name, link } = req.body;
-  const ownerId = req.headers['user'];
+  const ownerId = req.user._id;
+
+  console.log('********* ', ownerId);
 
   if (!name || !link) {
-    return res
-      .status(ERROR_CODE)
-      .json({ message: 'Información no encontrado' });
+    return res.status(NOT_FOUND).json({ message: 'Información no encontrado' });
   }
 
   try {
@@ -34,7 +34,7 @@ module.exports.createCard = async (req, res) => {
 
     if (err.name === 'ValidationError') {
       return res
-        .status(ERROR_CODE)
+        .status(NOT_FOUND)
         .json({ message: 'Datos de tarjeta invalidos' });
     }
 
@@ -46,10 +46,25 @@ module.exports.createCard = async (req, res) => {
 
 module.exports.deleteCard = async (req, res) => {
   const cardId = req.params.cardId;
+  const userId = req.user._id;
+
+  console.log(cardId);
 
   try {
     if (!mongoose.Types.ObjectId.isValid(cardId)) {
-      return res.status(ERROR_CODE).json({ message: 'ID de tarjeta invalido' });
+      return res.status(NOT_FOUND).json({ message: 'ID de tarjeta invalido' });
+    }
+
+    const card = await Cards.findById(cardId);
+
+    if (!card) {
+      return res.status(NOT_FOUND).json({ message: 'Tarjeta no encontrada' });
+    }
+
+    if (card.owner.toString() !== userId) {
+      return res
+        .status(FORBIDDEN)
+        .json({ message: 'No tienes permiso para borrar esta tarjeta' });
     }
 
     await Cards.findByIdAndDelete(cardId).orFail();
@@ -74,7 +89,7 @@ module.exports.likeCard = async (req, res) => {
 
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res
-        .status(ERROR_CODE)
+        .status(FORBIDDEN)
         .json({ message: ' ID de usuario no valido' });
     }
 
@@ -99,9 +114,7 @@ module.exports.disLikeCard = async (req, res) => {
     const userId = req.user._id;
 
     if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return res
-        .status(ERROR_CODE)
-        .json({ message: 'ID de usuario no valido' });
+      return res.status(NOT_FOUND).json({ message: 'ID de usuario no valido' });
     }
 
     await Cards.findByIdAndUpdate(
