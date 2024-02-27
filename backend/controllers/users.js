@@ -109,7 +109,14 @@ module.exports.login = async (req, res) => {
 
 module.exports.getCurrentUser = async (req, res) => {
   try {
-    const user = req.user;
+    if (!req.user) {
+      return res
+        .status(UNAUTHORIZED)
+        .send({ message: 'Usuario no autenticado' });
+    }
+
+    const userId = req.user._id;
+    const user = await Users.findById(userId);
 
     return res.json(user);
   } catch (err) {

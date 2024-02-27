@@ -1,9 +1,6 @@
 const { default: mongoose } = require('mongoose');
 const Cards = require('../models/card');
-
-const ERROR_CODE = 400;
-const NOT_FOUND = 404;
-const SERVEL_ERROR = 500;
+const { ERROR_CODE, NOT_FOUND, SERVER_ERROR } = require('../utils/constants');
 
 module.exports.getCards = async (req, res) => {
   try {
@@ -13,7 +10,7 @@ module.exports.getCards = async (req, res) => {
   } catch (err) {
     console.error(err);
     return res
-      .status(SERVEL_ERROR)
+      .status(SERVER_ERROR)
       .json({ message: 'Error interno del servidor' });
   }
 };
@@ -42,7 +39,7 @@ module.exports.createCard = async (req, res) => {
     }
 
     return res
-      .status(SERVEL_ERROR)
+      .status(SERVER_ERROR)
       .json({ message: 'Error al crear una nueva tarjeta' });
   }
 };
@@ -66,7 +63,7 @@ module.exports.deleteCard = async (req, res) => {
     }
 
     return res
-      .status(SERVEL_ERROR)
+      .status(SERVER_ERROR)
       .json({ message: 'Error interno del servidor' });
   }
 };
@@ -92,7 +89,7 @@ module.exports.likeCard = async (req, res) => {
     console.error(err);
 
     return res
-      .status(SERVEL_ERROR)
+      .status(SERVER_ERROR)
       .json({ message: 'Error interno del servidor' });
   }
 };
@@ -118,7 +115,7 @@ module.exports.disLikeCard = async (req, res) => {
     console.error(err);
 
     return res
-      .status(SERVEL_ERROR)
+      .status(SERVER_ERROR)
       .json({ message: 'Error interno del servidor' });
   }
 };
