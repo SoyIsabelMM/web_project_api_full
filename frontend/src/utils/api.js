@@ -24,7 +24,7 @@ class Api {
   async getUserInfoFromServer() {
     try {
       const res = await this._useFetch(
-        "http://proyectoaroundisa.twilightparadox.com/users/me",
+        "https://api.proyectoaroundisa.twilightparadox.com/users/me",
         "GET"
       );
 
@@ -37,7 +37,7 @@ class Api {
   async getCards() {
     try {
       const res = await this._useFetch(
-        "http://proyectoaroundisa.twilightparadox.com/cards",
+        "https://api.proyectoaroundisa.twilightparadox.com/cards",
         "GET"
       );
       return res;
@@ -49,7 +49,7 @@ class Api {
   async saveDataToServer(name, about) {
     try {
       const res = await this._useFetch(
-        "http://proyectoaroundisa.twilightparadox.com/users/me",
+        "https://api.proyectoaroundisa.twilightparadox.com/users/me",
         "PATCH",
         {
           name,
@@ -66,7 +66,7 @@ class Api {
   async addNewCardToServer(name, link) {
     try {
       const res = await this._useFetch(
-        "http://proyectoaroundisa.twilightparadox.com/cards",
+        "https://api.proyectoaroundisa.twilightparadox.com/cards",
         "POST",
         {
           name: name,
@@ -82,7 +82,7 @@ class Api {
   async deleteCardFromServer(cardId) {
     try {
       const res = await this._useFetch(
-        `http://proyectoaroundisa.twilightparadox.com/cards/${cardId}`,
+        `https://api.proyectoaroundisa.twilightparadox.com/cards/${cardId}`,
         "DELETE"
       );
 
@@ -95,7 +95,7 @@ class Api {
   async addLikeFromCard(cardId) {
     try {
       const res = await this._useFetch(
-        `http://proyectoaroundisa.twilightparadox.com/cards/likes/${cardId}`,
+        `https://api.proyectoaroundisa.twilightparadox.com/cards/likes/${cardId}`,
         "PUT"
       );
 
@@ -108,7 +108,7 @@ class Api {
   async deleteLikeFromCard(cardId) {
     try {
       const res = await this._useFetch(
-        `http://proyectoaroundisa.twilightparadox.com/cards/likes/${cardId}`,
+        `https://api.proyectoaroundisa.twilightparadox.com/cards/likes/${cardId}`,
         "DELETE"
       );
 
@@ -122,7 +122,7 @@ class Api {
     try {
       if (typeof avatarUrl === "string" && /^https?:\/\/\S+$/.test(avatarUrl)) {
         const res = await this._useFetch(
-          "http://proyectoaroundisa.twilightparadox.com/users/me/avatar",
+          "https://api.proyectoaroundisa.twilightparadox.com/users/me/avatar",
           "PATCH",
           {
             avatar: avatarUrl,
@@ -140,7 +140,7 @@ class Api {
 }
 
 const api = new Api({
-  address: "http://proyectoaroundisa.twilightparadox.com",
+  address: "https://api.proyectoaroundisa.twilightparadox.com",
   token: `33ee3393b29f3de681e2bf179e056c8fae6efdba6f91c2a9405e56d2eae15d58`,
 });
 
