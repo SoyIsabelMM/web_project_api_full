@@ -37,6 +37,8 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [email, setEmail] = useState("");
 
+  const [token, setToken] = useState(localStorage.getItem("token") || null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -161,20 +163,20 @@ function App() {
   /** Funciones para manejo de autorización */
   const handleLogin = () => {
     setLoggedIn(true);
+    setToken(token);
   };
 
   const handleSignOut = () => {
-    localStorage.removeItem("jwt");
+    localStorage.removeItem("token");
     setEmail("");
     setLoggedIn(false);
   };
 
   useEffect(() => {
     const handleCheckToken = () => {
-      if (localStorage.getItem("jwt")) {
-        const jwt = localStorage.getItem("jwt");
+      if (localStorage.getItem("token")) {
+        const jwt = localStorage.getItem("token");
 
-        console.log(jwt);
         auth
           .checkToken(jwt)
           .then((res) => {

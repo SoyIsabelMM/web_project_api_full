@@ -1,6 +1,7 @@
 class Api {
   constructor() {
-    this._authorization = "e1a4b600-66f9-4d45-b660-4ae737476424";
+    this._authorization =
+      "33ee3393b29f3de681e2bf179e056c8fae6efdba6f91c2a9405e56d2eae15d58";
   }
 
   async _useFetch(url, method, body) {
@@ -23,7 +24,7 @@ class Api {
   async getUserInfoFromServer() {
     try {
       const res = await this._useFetch(
-        "https://around.nomoreparties.co/v1/web_es_05/users/me",
+        "http://proyectoaroundisa.twilightparadox.com/users/me",
         "GET"
       );
 
@@ -36,7 +37,7 @@ class Api {
   async getCards() {
     try {
       const res = await this._useFetch(
-        "https://around.nomoreparties.co/v1/web_es_05/cards",
+        "http://proyectoaroundisa.twilightparadox.com/cards",
         "GET"
       );
       return res;
@@ -48,7 +49,7 @@ class Api {
   async saveDataToServer(name, about) {
     try {
       const res = await this._useFetch(
-        "https://around.nomoreparties.co/v1/web_es_05/users/me",
+        "http://proyectoaroundisa.twilightparadox.com/users/me",
         "PATCH",
         {
           name,
@@ -65,7 +66,7 @@ class Api {
   async addNewCardToServer(name, link) {
     try {
       const res = await this._useFetch(
-        "https://around.nomoreparties.co/v1/web_es_05/cards",
+        "http://proyectoaroundisa.twilightparadox.com/cards",
         "POST",
         {
           name: name,
@@ -81,7 +82,7 @@ class Api {
   async deleteCardFromServer(cardId) {
     try {
       const res = await this._useFetch(
-        `https://around.nomoreparties.co/v1/web_es_05/cards/${cardId}`,
+        `http://proyectoaroundisa.twilightparadox.com/cards/${cardId}`,
         "DELETE"
       );
 
@@ -94,7 +95,7 @@ class Api {
   async addLikeFromCard(cardId) {
     try {
       const res = await this._useFetch(
-        `https://around.nomoreparties.co/v1/web_es_05/cards/likes/${cardId}`,
+        `http://proyectoaroundisa.twilightparadox.com/cards/likes/${cardId}`,
         "PUT"
       );
 
@@ -107,7 +108,7 @@ class Api {
   async deleteLikeFromCard(cardId) {
     try {
       const res = await this._useFetch(
-        `https://around.nomoreparties.co/v1/web_es_05/cards/likes/${cardId}`,
+        `http://proyectoaroundisa.twilightparadox.com/cards/likes/${cardId}`,
         "DELETE"
       );
 
@@ -121,7 +122,7 @@ class Api {
     try {
       if (typeof avatarUrl === "string" && /^https?:\/\/\S+$/.test(avatarUrl)) {
         const res = await this._useFetch(
-          "https://around.nomoreparties.co/v1/web_es_05/users/me/avatar",
+          "http://proyectoaroundisa.twilightparadox.com/users/me/avatar",
           "PATCH",
           {
             avatar: avatarUrl,
@@ -139,9 +140,8 @@ class Api {
 }
 
 const api = new Api({
-  address: "https://around.nomoreparties.co",
-  groupId: `web_es_05`,
-  token: `e1a4b600-66f9-4d45-b660-4ae737476424`,
+  address: "http://proyectoaroundisa.twilightparadox.com",
+  token: `33ee3393b29f3de681e2bf179e056c8fae6efdba6f91c2a9405e56d2eae15d58`,
 });
 
 export default api;

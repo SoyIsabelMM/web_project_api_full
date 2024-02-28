@@ -1,4 +1,4 @@
-const BASE_URL = "https://register.nomoreparties.co";
+const BASE_URL = "http://proyectoaroundisa.twilightparadox.com";
 
 export const register = (password, email) => {
   return fetch(`${BASE_URL}/signup`, {
@@ -37,7 +37,7 @@ export const authorize = (password, email) => {
     })
     .then((credentials) => {
       if (credentials.token) {
-        localStorage.setItem("jwt", credentials.token);
+        localStorage.setItem("token", credentials.token);
         return credentials;
       }
     })

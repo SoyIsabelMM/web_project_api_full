@@ -35,9 +35,10 @@ function Login({ title, handleLogin, nameBtn }) {
       .authorize(credentials.password, credentials.email)
       .then((responseData) => {
         if (responseData.token) {
+          localStorage.setItem("token", responseData.token);
           setCredentials({ email: "", password: "" });
           navigate("/");
-          handleLogin();
+          handleLogin(responseData.token);
         }
       })
       .catch((err) => {

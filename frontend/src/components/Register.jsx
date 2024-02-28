@@ -33,6 +33,7 @@ function Register({ title, nameBtn }) {
       .then((res) => {
         console.log(res);
         if (res.data) {
+          localStorage.setItem("token", res.data.token);
           navigate("/signin", { state: "success" });
         } else {
           setError(true);
