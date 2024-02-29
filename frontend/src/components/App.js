@@ -55,7 +55,6 @@ function App() {
       .getCards()
       .then(({ cards }) => {
         setCards(cards);
-        console.log(cards);
       })
       .catch((err) => {
         console.log(err);
@@ -86,12 +85,11 @@ function App() {
   const handleUpdateUser = async (data) => {
     api
       .saveDataToServer(data.name, data.about)
-      .then((userData) => {
+      .then(() => {
         const updateUser = {
           ...currentUser,
-          name: userData.name,
-          about: userData.about,
-          avatar: userData.avatar,
+          name: data.name,
+          about: data.about,
         };
 
         setCurrentUser(updateUser);
@@ -102,16 +100,15 @@ function App() {
       });
   };
 
-  const handleUpdateAvatar = async (data) => {
+  const handleUpdateAvatar = async (url) => {
     api
-      .updateAvatar(data)
-      .then((avatarUrl) => {
+      .updateAvatar(url)
+      .then(() => {
         const updateAvatar = {
           ...currentUser,
-          avatar: avatarUrl.avatar,
-          name: avatarUrl.name,
-          about: avatarUrl.about,
+          avatar: url,
         };
+
         setCurrentUser(updateAvatar);
         setIsEditAvatarPopupOpen(true);
       })
