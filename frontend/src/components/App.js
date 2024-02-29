@@ -180,9 +180,8 @@ function App() {
         auth
           .checkToken(jwt)
           .then((res) => {
-            console.log("Res", res.email);
-            if (res.data) {
-              setEmail(res.data.email);
+            if (res.email) {
+              setEmail(res.email);
               setLoggedIn(true);
               navigate("/");
             } else {
