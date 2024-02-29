@@ -1,13 +1,13 @@
 class Api {
-  constructor() {
-    this._authorization =
-      "33ee3393b29f3de681e2bf179e056c8fae6efdba6f91c2a9405e56d2eae15d58";
+  constructor({ address }) {
+    this._address = address;
+    this._token = localStorage.getItem("token");
   }
 
   async _useFetch(url, method, body) {
     const res = await fetch(url, {
       headers: {
-        authorization: this._authorization,
+        Authorization: "Bearer " + this._token,
         "Content-Type": "application/json",
       },
       method,
@@ -23,10 +23,7 @@ class Api {
 
   async getUserInfoFromServer() {
     try {
-      const res = await this._useFetch(
-        "https://api.proyectoaroundisa.twilightparadox.com/users/me",
-        "GET"
-      );
+      const res = await this._useFetch(this._address + "/users/me", "GET");
 
       return res;
     } catch (err) {
@@ -36,10 +33,7 @@ class Api {
 
   async getCards() {
     try {
-      const res = await this._useFetch(
-        "https://api.proyectoaroundisa.twilightparadox.com/cards",
-        "GET"
-      );
+      const res = await this._useFetch(this._address + "/cards", "GET");
       return res;
     } catch (err) {
       console.log(err);
@@ -48,14 +42,10 @@ class Api {
 
   async saveDataToServer(name, about) {
     try {
-      const res = await this._useFetch(
-        "https://api.proyectoaroundisa.twilightparadox.com/users/me",
-        "PATCH",
-        {
-          name,
-          about,
-        }
-      );
+      const res = await this._useFetch(this._address + "/users/me", "PATCH", {
+        name,
+        about,
+      });
 
       return res;
     } catch (err) {
@@ -65,14 +55,10 @@ class Api {
 
   async addNewCardToServer(name, link) {
     try {
-      const res = await this._useFetch(
-        "https://api.proyectoaroundisa.twilightparadox.com/cards",
-        "POST",
-        {
-          name: name,
-          link: link,
-        }
-      );
+      const res = await this._useFetch(this._address + "/cards", "POST", {
+        name: name,
+        link: link,
+      });
       return res;
     } catch (err) {
       console.log(err);
@@ -82,7 +68,7 @@ class Api {
   async deleteCardFromServer(cardId) {
     try {
       const res = await this._useFetch(
-        `https://api.proyectoaroundisa.twilightparadox.com/cards/${cardId}`,
+        `${this._address}/cards/${cardId}`,
         "DELETE"
       );
 
@@ -95,7 +81,7 @@ class Api {
   async addLikeFromCard(cardId) {
     try {
       const res = await this._useFetch(
-        `https://api.proyectoaroundisa.twilightparadox.com/cards/likes/${cardId}`,
+        `${this._address}/cards/likes/${cardId}`,
         "PUT"
       );
 
@@ -108,7 +94,7 @@ class Api {
   async deleteLikeFromCard(cardId) {
     try {
       const res = await this._useFetch(
-        `https://api.proyectoaroundisa.twilightparadox.com/cards/likes/${cardId}`,
+        `${this._address}/cards/likes/${cardId}`,
         "DELETE"
       );
 
@@ -122,7 +108,7 @@ class Api {
     try {
       if (typeof avatarUrl === "string" && /^https?:\/\/\S+$/.test(avatarUrl)) {
         const res = await this._useFetch(
-          "https://api.proyectoaroundisa.twilightparadox.com/users/me/avatar",
+          this._address + "/users/me/avatar",
           "PATCH",
           {
             avatar: avatarUrl,
@@ -141,7 +127,6 @@ class Api {
 
 const api = new Api({
   address: "https://api.proyectoaroundisa.twilightparadox.com",
-  token: `33ee3393b29f3de681e2bf179e056c8fae6efdba6f91c2a9405e56d2eae15d58`,
 });
 
 export default api;

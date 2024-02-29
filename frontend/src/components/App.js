@@ -34,10 +34,10 @@ function App() {
   const [cardToDelete, setCardToDelete] = useState(null);
 
   //** Constantes para inicio de estado, manejo de autorización */
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [email, setEmail] = useState("");
-
   const [token, setToken] = useState(localStorage.getItem("token") || null);
+  const [loggedIn, setLoggedIn] = useState(!!token);
+
+  const [email, setEmail] = useState("");
 
   const navigate = useNavigate();
 
@@ -53,8 +53,9 @@ function App() {
 
     api
       .getCards()
-      .then((data) => {
-        setCards(data);
+      .then(({ cards }) => {
+        setCards(cards);
+        console.log(cards);
       })
       .catch((err) => {
         console.log(err);
@@ -176,10 +177,10 @@ function App() {
     const handleCheckToken = () => {
       if (localStorage.getItem("token")) {
         const jwt = localStorage.getItem("token");
-
         auth
           .checkToken(jwt)
           .then((res) => {
+            console.log("Res", res.email);
             if (res.data) {
               setEmail(res.data.email);
               setLoggedIn(true);
