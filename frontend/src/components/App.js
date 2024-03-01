@@ -118,7 +118,8 @@ function App() {
   };
 
   function handleCardLikeOrDisLike(card) {
-    const isLike = card.likes?.some((i) => i._id === currentUser._id);
+    console.log("card", card, "user", currentUser);
+    const isLike = card.likes?.some((i) => i === currentUser._id);
 
     let apiRequest = isLike
       ? api.deleteLikeFromCard(card._id, isLike)

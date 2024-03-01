@@ -126,7 +126,8 @@ class Api {
 }
 
 const api = new Api({
-  address: "https://api.proyectoaroundisa.twilightparadox.com",
+  // address: "https://api.proyectoaroundisa.twilightparadox.com",
+  address: "http://localhost:3000",
 });
 
 export default api;

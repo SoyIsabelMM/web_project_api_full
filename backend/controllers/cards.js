@@ -125,8 +125,10 @@ module.exports.disLikeCard = async (req, res) => {
       { $pull: { likes: userId } },
       { new: true },
     ).orFail();
-
-    return res.status(200).json({ message: 'Like removido con exito' });
+    Cards.findById(req.params.cardId).then((card) => {
+      res.status(200).json(card);
+    });
+    //return res.status(200).json({ message: 'Like removido con exito' });
   } catch (err) {
     console.error(err);
 

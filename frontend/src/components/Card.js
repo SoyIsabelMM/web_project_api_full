@@ -35,7 +35,7 @@ function Card({
   console.log("Soy daniel", { ownerId: owner, userId: currentUser });
 
   const isLike =
-    Array.isArray(likes) && likes.some((i) => i._id === currentUser?._id);
+    Array.isArray(likes) && likes.some((i) => i === currentUser?._id);
 
   const cardDeleteBtnClassName = `${
     isOwner ? "card-elements__container-btn-delete" : "inactive"
