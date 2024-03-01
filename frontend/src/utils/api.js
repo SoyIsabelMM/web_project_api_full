@@ -81,7 +81,7 @@ class Api {
   async addLikeFromCard(cardId) {
     try {
       const res = await this._useFetch(
-        `${this._address}/cards/likes/${cardId}`,
+        `${this._address}/cards/${cardId}/likes`,
         "PUT"
       );
 
@@ -94,7 +94,7 @@ class Api {
   async deleteLikeFromCard(cardId) {
     try {
       const res = await this._useFetch(
-        `${this._address}/cards/likes/${cardId}`,
+        `${this._address}/cards/${cardId}/likes`,
         "DELETE"
       );
 

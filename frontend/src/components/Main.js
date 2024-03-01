@@ -29,6 +29,7 @@ function Main({
         {/* Here we will show all our cards  */}
         {Array.isArray(cards) &&
           cards.map((card) => {
+            console.log("vengo de cards.map", card);
             return (
               <Card
                 key={card._id}

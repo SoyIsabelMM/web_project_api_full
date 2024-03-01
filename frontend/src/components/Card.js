@@ -24,9 +24,15 @@ function Card({
     onCardDelete();
   };
 
+  console.log(likes);
+
   const currentUser = useContext(CurrentUserContext);
 
-  const isOwner = owner._id === currentUser?._id;
+  console.log(owner);
+
+  const isOwner = owner === currentUser?._id;
+
+  console.log("Soy daniel", { ownerId: owner, userId: currentUser });
 
   const isLike =
     Array.isArray(likes) && likes.some((i) => i._id === currentUser?._id);
@@ -67,9 +73,9 @@ function Card({
           alt="like inactivo"
           onClick={handleCardLike}
         />
-        {likes.length !== 0 && (
+        {likes?.length !== 0 && (
           <>
-            <span className="card-elements__like-counter">{likes.length}</span>
+            <span className="card-elements__like-counter">{likes?.length}</span>
           </>
         )}
       </div>

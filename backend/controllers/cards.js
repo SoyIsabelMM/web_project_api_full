@@ -99,7 +99,10 @@ module.exports.likeCard = async (req, res) => {
       { new: true },
     ).orFail();
 
-    return res.status(200).json({ message: 'Le diste like a la card' });
+    Cards.findById(req.params.cardId).then((card) => {
+      res.status(200).json(card);
+    });
+    //return res.status(200).json({ message: 'Le diste like a la card' });
   } catch (err) {
     console.error(err);
 
