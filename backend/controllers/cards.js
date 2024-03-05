@@ -4,7 +4,7 @@ const { NOT_FOUND, SERVER_ERROR, FORBIDDEN } = require('../utils/constants');
 
 module.exports.getCards = async (req, res) => {
   try {
-    const cards = await Cards.find({}).orFail();
+    const cards = await Cards.find({}).sort({ createdAt: -1 }).orFail();
 
     return res.json({ cards });
   } catch (err) {
@@ -19,16 +19,16 @@ module.exports.createCard = async (req, res) => {
   const { name, link } = req.body;
   const ownerId = req.user._id;
 
-  console.log('********* ', ownerId);
-
   if (!name || !link) {
     return res.status(NOT_FOUND).json({ message: 'Información no encontrado' });
   }
 
   try {
-    await Cards.create({ name, link, owner: ownerId });
+    const newCard = await Cards.create({ name, link, owner: ownerId });
 
-    return res.status(201).json({ name, link, owner: ownerId });
+    return res
+      .status(201)
+      .json({ _id: newCard._id.toString(), name, link, owner: ownerId });
   } catch (err) {
     console.error(err);
 
@@ -47,8 +47,6 @@ module.exports.createCard = async (req, res) => {
 module.exports.deleteCard = async (req, res) => {
   const cardId = req.params.cardId;
   const userId = req.user._id;
-
-  console.log(cardId);
 
   try {
     if (!mongoose.Types.ObjectId.isValid(cardId)) {

@@ -41,26 +41,6 @@ function App() {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    api
-      .getUserInfoFromServer()
-      .then((userInfo) => {
-        setCurrentUser(userInfo);
-      })
-      .catch((err) => {
-        console.log("Disculpa, se ha encontrado un error:", err);
-      });
-
-    api
-      .getCards()
-      .then(({ cards }) => {
-        setCards(cards);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(false);
   };
@@ -118,7 +98,6 @@ function App() {
   };
 
   function handleCardLikeOrDisLike(card) {
-    console.log("card", card, "user", currentUser);
     const isLike = card.likes?.some((i) => i === currentUser._id);
 
     let apiRequest = isLike
@@ -137,9 +116,9 @@ function App() {
     });
   }
 
-  const handleAddPlaceSubmit = async (newPlaceData) => {
+  const handleAddPlaceSubmit = async ({ name, link }) => {
     api
-      .addNewCardToServer(newPlaceData.name, newPlaceData.link)
+      .addNewCardToServer(name, link)
       .then((newCard) => {
         setCards([newCard, ...cards]);
         setIsAddPlacePopupOpen(true);
@@ -182,8 +161,20 @@ function App() {
               setEmail(res.email);
               setLoggedIn(true);
               navigate("/");
+              setCurrentUser(res);
+
+              api
+                .getCards()
+                .then(({ cards }) => {
+                  setCards(cards);
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
             } else {
               console.error("El token no es valido:");
+              localStorage.removeItem("token");
+              navigate("/signin");
             }
           })
           .catch((err) => {

@@ -23,6 +23,7 @@ function Input({
         onChange={onChange}
         value={value}
         name={id}
+        autocomplete="current-password"
       />
       {children}
     </>

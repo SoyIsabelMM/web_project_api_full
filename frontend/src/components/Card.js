@@ -24,15 +24,9 @@ function Card({
     onCardDelete();
   };
 
-  console.log(likes);
-
   const currentUser = useContext(CurrentUserContext);
 
-  console.log(owner);
-
   const isOwner = owner === currentUser?._id;
-
-  console.log("Soy daniel", { ownerId: owner, userId: currentUser });
 
   const isLike =
     Array.isArray(likes) && likes.some((i) => i === currentUser?._id);

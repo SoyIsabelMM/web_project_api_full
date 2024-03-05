@@ -59,6 +59,8 @@ class Api {
         name: name,
         link: link,
       });
+
+      console.log("api", res);
       return res;
     } catch (err) {
       console.log(err);
@@ -126,8 +128,7 @@ class Api {
 }
 
 const api = new Api({
-  // address: "https://api.proyectoaroundisa.twilightparadox.com",
-  address: "http://localhost:3000",
+  address: "https://api.proyectoaroundisa.twilightparadox.com",
 });
 
 export default api;
