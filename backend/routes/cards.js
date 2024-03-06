@@ -7,9 +7,19 @@ const {
   disLikeCard,
 } = require('../controllers/cards');
 
+//validation celebrate
+const { celebrate } = require('celebrate');
+const { cardCreationValidator } = require('../models/validationSchemas');
+
 router.get('/cards', getCards);
 
-router.post('/cards', createCard);
+router.post(
+  '/cards',
+  celebrate({
+    body: cardCreationValidator,
+  }),
+  createCard,
+);
 
 router.delete('/cards/:cardId', deleteCard);
 

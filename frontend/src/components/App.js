@@ -4,7 +4,10 @@ import Main from "./Main.js";
 import Footer from "./Footer.js";
 import "../index.css";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
+
 import api from "../utils/api.js";
+import * as auth from "../utils/auth.js";
+
 import EditAvatarPopup from "./EditAvatarPopup.js";
 import EditProfilePopup from "./EditProfilePopup.js";
 import ConfirmationPopup from "./ConfirmationPopup.js";
@@ -14,7 +17,6 @@ import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import Login from "./Login.jsx";
 import Register from "./Register.jsx";
 import ProtectedRoute from "./ProtectedRoute.jsx";
-import * as auth from "../utils/auth.js";
 
 function App() {
   //** Manejo de estado de los Popups (abrir o cerrar) valor inicial: Cerrado "true"*/

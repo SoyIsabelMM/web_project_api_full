@@ -1,3 +1,6 @@
+// const BASE_URL = "https://api.proyectoaroundisa.twilightparadox.com";
+const BASE_URL = "http://localhost:3000";
+
 class Api {
   constructor({ address }) {
     this._address = address;
@@ -60,7 +63,6 @@ class Api {
         link: link,
       });
 
-      console.log("api", res);
       return res;
     } catch (err) {
       console.log(err);
@@ -128,7 +130,7 @@ class Api {
 }
 
 const api = new Api({
-  address: "https://api.proyectoaroundisa.twilightparadox.com",
+  address: BASE_URL,
 });
 
 export default api;
