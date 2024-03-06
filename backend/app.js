@@ -18,6 +18,9 @@ const {
 //validation celebrate
 const { celebrate, errors } = require('celebrate');
 
+//Registro de solicitudes y errores
+const { logRequest, errorLogger } = require('./middlewares/logger');
+
 const { PORT = 3000 } = process.env;
 
 const app = express();
@@ -25,6 +28,8 @@ app.use(cors());
 app.use(express.json());
 
 mongoose.connect('mongodb://localhost:27017/aroundb');
+
+app.use(logRequest);
 
 app.post(
   '/signin',
@@ -42,8 +47,11 @@ app.use('/', cardsRoute);
 app.use('/', usersRoute);
 
 app.use(errors());
+
 app.use((err, req, res, next) => {
   console.error(err.stack);
+
+  errorLogger.error(err.message);
 
   res.status(SERVER_ERROR).json({ message: 'Error interno del servidor' });
 });
