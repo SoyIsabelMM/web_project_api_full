@@ -1,12 +1,16 @@
+const BASE_URL = "https://api.proyectoaroundisa.twilightparadox.com";
+// const BASE_URL = "http://localhost:3000";
+
 class Api {
-  constructor() {
-    this._authorization = "e1a4b600-66f9-4d45-b660-4ae737476424";
+  constructor({ address }) {
+    this._address = address;
+    this._token = localStorage.getItem("token");
   }
 
   async _useFetch(url, method, body) {
     const res = await fetch(url, {
       headers: {
-        authorization: this._authorization,
+        Authorization: "Bearer " + this._token,
         "Content-Type": "application/json",
       },
       method,
@@ -22,10 +26,7 @@ class Api {
 
   async getUserInfoFromServer() {
     try {
-      const res = await this._useFetch(
-        "https://around.nomoreparties.co/v1/web_es_05/users/me",
-        "GET"
-      );
+      const res = await this._useFetch(this._address + "/users/me", "GET");
 
       return res;
     } catch (err) {
@@ -35,10 +36,7 @@ class Api {
 
   async getCards() {
     try {
-      const res = await this._useFetch(
-        "https://around.nomoreparties.co/v1/web_es_05/cards",
-        "GET"
-      );
+      const res = await this._useFetch(this._address + "/cards", "GET");
       return res;
     } catch (err) {
       console.log(err);
@@ -47,14 +45,10 @@ class Api {
 
   async saveDataToServer(name, about) {
     try {
-      const res = await this._useFetch(
-        "https://around.nomoreparties.co/v1/web_es_05/users/me",
-        "PATCH",
-        {
-          name,
-          about,
-        }
-      );
+      const res = await this._useFetch(this._address + "/users/me", "PATCH", {
+        name,
+        about,
+      });
 
       return res;
     } catch (err) {
@@ -64,14 +58,11 @@ class Api {
 
   async addNewCardToServer(name, link) {
     try {
-      const res = await this._useFetch(
-        "https://around.nomoreparties.co/v1/web_es_05/cards",
-        "POST",
-        {
-          name: name,
-          link: link,
-        }
-      );
+      const res = await this._useFetch(this._address + "/cards", "POST", {
+        name: name,
+        link: link,
+      });
+
       return res;
     } catch (err) {
       console.log(err);
@@ -81,7 +72,7 @@ class Api {
   async deleteCardFromServer(cardId) {
     try {
       const res = await this._useFetch(
-        `https://around.nomoreparties.co/v1/web_es_05/cards/${cardId}`,
+        `${this._address}/cards/${cardId}`,
         "DELETE"
       );
 
@@ -94,7 +85,7 @@ class Api {
   async addLikeFromCard(cardId) {
     try {
       const res = await this._useFetch(
-        `https://around.nomoreparties.co/v1/web_es_05/cards/likes/${cardId}`,
+        `${this._address}/cards/${cardId}/likes`,
         "PUT"
       );
 
@@ -107,7 +98,7 @@ class Api {
   async deleteLikeFromCard(cardId) {
     try {
       const res = await this._useFetch(
-        `https://around.nomoreparties.co/v1/web_es_05/cards/likes/${cardId}`,
+        `${this._address}/cards/${cardId}/likes`,
         "DELETE"
       );
 
@@ -121,7 +112,7 @@ class Api {
     try {
       if (typeof avatarUrl === "string" && /^https?:\/\/\S+$/.test(avatarUrl)) {
         const res = await this._useFetch(
-          "https://around.nomoreparties.co/v1/web_es_05/users/me/avatar",
+          this._address + "/users/me/avatar",
           "PATCH",
           {
             avatar: avatarUrl,
@@ -139,9 +130,7 @@ class Api {
 }
 
 const api = new Api({
-  address: "https://around.nomoreparties.co",
-  groupId: `web_es_05`,
-  token: `e1a4b600-66f9-4d45-b660-4ae737476424`,
+  address: BASE_URL,
 });
 
 export default api;

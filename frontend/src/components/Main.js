@@ -27,20 +27,21 @@ function Main({
 
       <section className="card-elements">
         {/* Here we will show all our cards  */}
-        {cards.map((card) => {
-          return (
-            <Card
-              key={card._id}
-              name={card.name}
-              link={card.link}
-              likes={card.likes}
-              onCardClick={() => onCardClick(card)}
-              onCardLike={() => onCardLike(card)}
-              onCardDelete={() => onCardDelete(card)}
-              owner={card.owner}
-            />
-          );
-        })}
+        {Array.isArray(cards) &&
+          cards.map((card) => {
+            return (
+              <Card
+                key={card._id}
+                name={card.name}
+                link={card.link}
+                likes={card.likes}
+                onCardClick={() => onCardClick(card)}
+                onCardLike={() => onCardLike(card)}
+                onCardDelete={() => onCardDelete(card)}
+                owner={card.owner}
+              />
+            );
+          })}
       </section>
     </main>
   );

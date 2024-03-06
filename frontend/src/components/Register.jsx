@@ -31,16 +31,14 @@ function Register({ title, nameBtn }) {
     auth
       .register(credentials.password, credentials.email)
       .then((res) => {
-        console.log(res);
-        if (res.data) {
-          navigate("/signin", { state: "success" });
-        } else {
-          setError(true);
-          setOpen(false);
-        }
+        localStorage.setItem("token", res.token);
+        navigate("/signin", { state: "success" });
       })
       .catch((err) => {
-        console.log(err);
+        console.error({
+          message: "Error creando el usuario",
+          detail: err.message,
+        });
         setError(true);
         setOpen(false);
       });

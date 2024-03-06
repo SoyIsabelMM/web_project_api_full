@@ -4,7 +4,10 @@ import Main from "./Main.js";
 import Footer from "./Footer.js";
 import "../index.css";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
+
 import api from "../utils/api.js";
+import * as auth from "../utils/auth.js";
+
 import EditAvatarPopup from "./EditAvatarPopup.js";
 import EditProfilePopup from "./EditProfilePopup.js";
 import ConfirmationPopup from "./ConfirmationPopup.js";
@@ -14,7 +17,6 @@ import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import Login from "./Login.jsx";
 import Register from "./Register.jsx";
 import ProtectedRoute from "./ProtectedRoute.jsx";
-import * as auth from "../utils/auth.js";
 
 function App() {
   //** Manejo de estado de los Popups (abrir o cerrar) valor inicial: Cerrado "true"*/
@@ -34,30 +36,12 @@ function App() {
   const [cardToDelete, setCardToDelete] = useState(null);
 
   //** Constantes para inicio de estado, manejo de autorización */
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [token, setToken] = useState(localStorage.getItem("token") || null);
+  const [loggedIn, setLoggedIn] = useState(!!token);
+
   const [email, setEmail] = useState("");
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    api
-      .getUserInfoFromServer()
-      .then((userInfo) => {
-        setCurrentUser(userInfo);
-      })
-      .catch((err) => {
-        console.log("Disculpa, se ha encontrado un error:", err);
-      });
-
-    api
-      .getCards()
-      .then((data) => {
-        setCards(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
 
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(false);
@@ -83,12 +67,11 @@ function App() {
   const handleUpdateUser = async (data) => {
     api
       .saveDataToServer(data.name, data.about)
-      .then((userData) => {
+      .then(() => {
         const updateUser = {
           ...currentUser,
-          name: userData.name,
-          about: userData.about,
-          avatar: userData.avatar,
+          name: data.name,
+          about: data.about,
         };
 
         setCurrentUser(updateUser);
@@ -99,16 +82,15 @@ function App() {
       });
   };
 
-  const handleUpdateAvatar = async (data) => {
+  const handleUpdateAvatar = async (url) => {
     api
-      .updateAvatar(data)
-      .then((avatarUrl) => {
+      .updateAvatar(url)
+      .then(() => {
         const updateAvatar = {
           ...currentUser,
-          avatar: avatarUrl.avatar,
-          name: avatarUrl.name,
-          about: avatarUrl.about,
+          avatar: url,
         };
+
         setCurrentUser(updateAvatar);
         setIsEditAvatarPopupOpen(true);
       })
@@ -118,7 +100,7 @@ function App() {
   };
 
   function handleCardLikeOrDisLike(card) {
-    const isLike = card.likes.some((i) => i._id === currentUser._id);
+    const isLike = card.likes?.some((i) => i === currentUser._id);
 
     let apiRequest = isLike
       ? api.deleteLikeFromCard(card._id, isLike)
@@ -136,9 +118,9 @@ function App() {
     });
   }
 
-  const handleAddPlaceSubmit = async (newPlaceData) => {
+  const handleAddPlaceSubmit = async ({ name, link }) => {
     api
-      .addNewCardToServer(newPlaceData.name, newPlaceData.link)
+      .addNewCardToServer(name, link)
       .then((newCard) => {
         setCards([newCard, ...cards]);
         setIsAddPlacePopupOpen(true);
@@ -161,29 +143,40 @@ function App() {
   /** Funciones para manejo de autorización */
   const handleLogin = () => {
     setLoggedIn(true);
+    setToken(token);
   };
 
   const handleSignOut = () => {
-    localStorage.removeItem("jwt");
+    localStorage.removeItem("token");
     setEmail("");
     setLoggedIn(false);
   };
 
   useEffect(() => {
     const handleCheckToken = () => {
-      if (localStorage.getItem("jwt")) {
-        const jwt = localStorage.getItem("jwt");
-
-        console.log(jwt);
+      if (localStorage.getItem("token")) {
+        const jwt = localStorage.getItem("token");
         auth
           .checkToken(jwt)
           .then((res) => {
-            if (res.data) {
-              setEmail(res.data.email);
+            if (res.email) {
+              setEmail(res.email);
               setLoggedIn(true);
               navigate("/");
+              setCurrentUser(res);
+
+              api
+                .getCards()
+                .then(({ cards }) => {
+                  setCards(cards);
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
             } else {
               console.error("El token no es valido:");
+              localStorage.removeItem("token");
+              navigate("/signin");
             }
           })
           .catch((err) => {

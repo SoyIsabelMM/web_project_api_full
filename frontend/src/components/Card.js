@@ -26,10 +26,10 @@ function Card({
 
   const currentUser = useContext(CurrentUserContext);
 
-  const isOwner = owner._id === currentUser?._id;
+  const isOwner = owner === currentUser?._id;
 
   const isLike =
-    Array.isArray(likes) && likes.some((i) => i._id === currentUser?._id);
+    Array.isArray(likes) && likes.some((i) => i === currentUser?._id);
 
   const cardDeleteBtnClassName = `${
     isOwner ? "card-elements__container-btn-delete" : "inactive"
@@ -67,9 +67,9 @@ function Card({
           alt="like inactivo"
           onClick={handleCardLike}
         />
-        {likes.length !== 0 && (
+        {likes?.length !== 0 && (
           <>
-            <span className="card-elements__like-counter">{likes.length}</span>
+            <span className="card-elements__like-counter">{likes?.length}</span>
           </>
         )}
       </div>

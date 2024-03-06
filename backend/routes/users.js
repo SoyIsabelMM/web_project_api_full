@@ -2,26 +2,31 @@ const router = require('express').Router();
 const {
   getUsers,
   getUserById,
-  createUser,
   updateUserProfile,
   updateAvatarProfile,
+  getCurrentUser,
 } = require('../controllers/users');
-const mongoose = require('mongoose');
 
-const validateObjectId = (req, res, next) => {
-  const id = req.params._id;
+//validator celebrate
+const { celebrate } = require('celebrate');
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ message: 'ID de usuario no válido' });
-  }
-
-  next();
-};
+const {
+  updateProfileValidator,
+  updateAvatarValidator,
+} = require('../models/validationSchemas');
 
 router.get('/users', getUsers);
-router.get('/users/:_id', validateObjectId, getUserById);
-router.post('/users', createUser);
-router.patch('/users/me', updateUserProfile);
-router.patch('/users/me/avatar', updateAvatarProfile);
+router.get('/users/me', getCurrentUser);
+router.get('/users/:_id', getUserById);
+router.patch(
+  '/users/me',
+  celebrate({ body: updateProfileValidator }),
+  updateUserProfile,
+);
+router.patch(
+  '/users/me/avatar',
+  celebrate({ body: updateAvatarValidator }),
+  updateAvatarProfile,
+);
 
 module.exports = router;

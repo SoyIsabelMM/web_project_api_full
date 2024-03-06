@@ -34,16 +34,18 @@ function Login({ title, handleLogin, nameBtn }) {
     auth
       .authorize(credentials.password, credentials.email)
       .then((responseData) => {
-        if (responseData.token) {
+        if (responseData && responseData.token) {
+          localStorage.setItem("token", responseData.token);
           setCredentials({ email: "", password: "" });
           navigate("/");
-          handleLogin();
+          handleLogin(responseData.token);
+        } else {
+          setError(true);
         }
       })
       .catch((err) => {
         setError(true);
         setCredentials({ email: "", password: "" });
-        handleLogin();
         console.log(err);
       });
   };

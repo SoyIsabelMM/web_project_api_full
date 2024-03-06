@@ -1,8 +1,11 @@
+const bcrypt = require('bcrypt');
 const { default: mongoose } = require('mongoose');
 const Users = require('../models/user');
+const { NOT_FOUND, SERVER_ERROR, UNAUTHORIZED } = require('../utils/constants');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
-const NOT_FOUND = 404;
-const SERVEL_ERROR = 500;
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 module.exports.getUsers = async (req, res) => {
   try {
@@ -12,7 +15,7 @@ module.exports.getUsers = async (req, res) => {
   } catch (err) {
     console.error(err);
     res
-      .status(SERVEL_ERROR)
+      .status(SERVER_ERROR)
       .json({ message: 'Error al obtener usuarios desde la base de datos' });
   }
 };
@@ -31,24 +34,93 @@ module.exports.getUserById = async (req, res) => {
 
     console.error(err);
     return res
-      .status(SERVEL_ERROR)
+      .status(SERVER_ERROR)
       .json({ mensaje: 'Error al obtener tarjeta desde la base de datos' });
   }
 };
 
 module.exports.createUser = async (req, res) => {
-  const { name, about, avatar } = req.body;
+  const { name, about, avatar, email, password } = req.body;
 
   try {
-    await Users.create({ name, about, avatar });
+    const existingEmail = await Users.findOne({ email });
 
-    return res.status(201).json({ name, about, avatar });
+    if (existingEmail) {
+      return res
+        .status(SERVER_ERROR)
+        .json({ message: 'Este correo electrónico ya existe' });
+    }
+
+    const hashPassword = await bcrypt.hash(password, 10);
+
+    const newUser = await Users.create({
+      name,
+      about,
+      avatar,
+      email,
+      password: hashPassword,
+    });
+
+    return res.status(201).json(newUser);
   } catch (err) {
     console.error(err);
 
     return res
-      .status(SERVEL_ERROR)
+      .status(SERVER_ERROR)
       .json({ message: 'Error al crear un nuevo usuario' });
+  }
+};
+
+module.exports.login = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await Users.findOne({ email }).select('+password');
+
+    if (!user) {
+      return res
+        .status(UNAUTHORIZED)
+        .json({ message: 'Correo electrónico o contraseña incorrectos' });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return res
+        .status(UNAUTHORIZED)
+        .json({ message: 'Correo electrónico o contraseña incorrectos' });
+    }
+
+    const token = jwt.sign(
+      { _id: user._id },
+      NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+      { expiresIn: '1w' },
+    );
+
+    return res.json({ token });
+  } catch (err) {
+    console.error(err);
+
+    return res
+      .status(SERVER_ERROR)
+      .json({ message: 'Error interno del servidor' });
+  }
+};
+
+module.exports.getCurrentUser = async (req, res) => {
+  try {
+    if (!req.user) {
+      return res
+        .status(UNAUTHORIZED)
+        .send({ message: 'Usuario no autenticado' });
+    }
+
+    const userId = req.user._id;
+    const user = await Users.findById(userId);
+
+    return res.json(user);
+  } catch (err) {
+    res.status(SERVER_ERROR).json({ message: 'Error interno del servidor' });
   }
 };
 
@@ -65,7 +137,7 @@ module.exports.updateUserProfile = async (req, res) => {
     console.error(err);
 
     return res
-      .status(SERVEL_ERROR)
+      .status(SERVER_ERROR)
       .json({ message: 'Error interno del servidor' });
   }
 };
@@ -83,7 +155,7 @@ module.exports.updateAvatarProfile = async (req, res) => {
     console.error(err);
 
     return res
-      .status(SERVEL_ERROR)
+      .status(SERVER_ERROR)
       .json({ message: 'Error interno del servido' });
   }
 };

@@ -6,13 +6,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     minlength: 2,
     maxlength: 30,
-    required: true,
+    default: 'Jacques Cousteau',
   },
   about: {
     type: String,
     minlength: 2,
     maxlength: 30,
-    required: true,
+    default: 'Explorador',
   },
   avatar: {
     type: String,
@@ -22,7 +22,8 @@ const userSchema = new mongoose.Schema({
       },
       message: (props) => `${props.value} is not a valid url!`,
     },
-    required: true,
+    default:
+      'https://practicum-content.s3.us-west-1.amazonaws.com/resources/moved_avatar_1604080799.jpg',
   },
   email: {
     type: String,
@@ -35,6 +36,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     require: true,
+    select: false,
   },
 });
 
