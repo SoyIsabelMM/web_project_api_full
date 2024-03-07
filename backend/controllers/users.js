@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const { default: mongoose } = require('mongoose');
 const Users = require('../models/user');
-const { NOT_FOUND, SERVER_ERROR, UNAUTHORIZED } = require('../utils/constants');
+const { HttpStatus, HttpResponseMessage } = require('../enums/http');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
@@ -15,8 +15,8 @@ module.exports.getUsers = async (req, res) => {
   } catch (err) {
     console.error(err);
     res
-      .status(SERVER_ERROR)
-      .json({ message: 'Error al obtener usuarios desde la base de datos' });
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ message: HttpResponseMessage.SERVER_ERROR });
   }
 };
 
@@ -29,13 +29,15 @@ module.exports.getUserById = async (req, res) => {
     return res.json(user);
   } catch (err) {
     if (err instanceof mongoose.CastsError) {
-      return res.status(NOT_FOUND).json({ message: 'ID de usuario no válido' });
+      return res
+        .status(HttpStatus.NOT_FOUND)
+        .json({ message: HttpResponseMessage.NOT_FOUND });
     }
 
     console.error(err);
     return res
-      .status(SERVER_ERROR)
-      .json({ mensaje: 'Error al obtener tarjeta desde la base de datos' });
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ mensaje: HttpResponseMessage.SERVER_ERROR });
   }
 };
 
@@ -47,8 +49,8 @@ module.exports.createUser = async (req, res) => {
 
     if (existingEmail) {
       return res
-        .status(SERVER_ERROR)
-        .json({ message: 'Este correo electrónico ya existe' });
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ message: HttpResponseMessage.SERVER_ERROR });
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
@@ -66,8 +68,8 @@ module.exports.createUser = async (req, res) => {
     console.error(err);
 
     return res
-      .status(SERVER_ERROR)
-      .json({ message: 'Error al crear un nuevo usuario' });
+      .status(HttpStatus.SERVER_ERROR)
+      .json({ message: HttpResponseMessage.SERVER_ERROR });
   }
 };
 
@@ -79,16 +81,16 @@ module.exports.login = async (req, res) => {
 
     if (!user) {
       return res
-        .status(UNAUTHORIZED)
-        .json({ message: 'Correo electrónico o contraseña incorrectos' });
+        .status(HttpStatus.UNAUTHORIZED)
+        .json({ message: HttpResponseMessage.UNAUTHORIZED });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
       return res
-        .status(UNAUTHORIZED)
-        .json({ message: 'Correo electrónico o contraseña incorrectos' });
+        .status(HttpStatus.UNAUTHORIZED)
+        .json({ message: HttpResponseMessage.UNAUTHORIZED });
     }
 
     const token = jwt.sign(
@@ -102,8 +104,8 @@ module.exports.login = async (req, res) => {
     console.error(err);
 
     return res
-      .status(SERVER_ERROR)
-      .json({ message: 'Error interno del servidor' });
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ message: HttpResponseMessage.SERVER_ERROR });
   }
 };
 
@@ -111,8 +113,8 @@ module.exports.getCurrentUser = async (req, res) => {
   try {
     if (!req.user) {
       return res
-        .status(UNAUTHORIZED)
-        .send({ message: 'Usuario no autenticado' });
+        .status(HttpStatus.UNAUTHORIZED)
+        .send({ message: HttpResponseMessage.UNAUTHORIZED });
     }
 
     const userId = req.user._id;
@@ -120,7 +122,9 @@ module.exports.getCurrentUser = async (req, res) => {
 
     return res.json(user);
   } catch (err) {
-    res.status(SERVER_ERROR).json({ message: 'Error interno del servidor' });
+    res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ message: HttpResponseMessage.SERVER_ERROR });
   }
 };
 
@@ -132,13 +136,13 @@ module.exports.updateUserProfile = async (req, res) => {
   try {
     await Users.findByIdAndUpdate(id, { name, about }).orFail();
 
-    res.status(200).json({ message: 'Actualización exitosa' });
+    res.status(HttpStatus.OK).json({ message: HttpResponseMessage.SUCCESS });
   } catch (err) {
     console.error(err);
 
     return res
-      .status(SERVER_ERROR)
-      .json({ message: 'Error interno del servidor' });
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ message: HttpResponseMessage.SERVER_ERROR });
   }
 };
 
@@ -150,12 +154,12 @@ module.exports.updateAvatarProfile = async (req, res) => {
   try {
     await Users.findByIdAndUpdate(id, { avatar }).orFail();
 
-    res.status(200).json({ message: 'Actualización exitosa' });
+    res.status(HttpStatus.OK).json({ message: HttpResponseMessage.SUCCESS });
   } catch (err) {
     console.error(err);
 
     return res
-      .status(SERVER_ERROR)
-      .json({ message: 'Error interno del servido' });
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ message: HttpResponseMessage.SERVER_ERROR });
   }
 };

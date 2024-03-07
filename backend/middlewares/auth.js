@@ -1,11 +1,13 @@
 const jwt = require('jsonwebtoken');
-const { NOT_FOUND, SERVER_ERROR, UNAUTHORIZED } = require('../utils/constants');
+const { HttpStatus, HttpResponseMessage } = require('../enums/http');
 require('dotenv').config();
 
 const { JWT_SECRET } = process.env;
 
 const handleError = (res) => {
-  res.status(UNAUTHORIZED).send({ message: 'Error de autorización' });
+  res
+    .status(HttpStatus.UNAUTHORIZED)
+    .send({ message: HttpResponseMessage.UNAUTHORIZED });
 };
 
 module.exports = (req, res, next) => {

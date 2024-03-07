@@ -8,7 +8,7 @@ const cardsRoute = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 
-const { SERVER_ERROR } = require('./utils/constants');
+const { HttpStatus, HttpResponseMessage } = require('./enums/http');
 
 const {
   loginValidator,
@@ -24,7 +24,9 @@ const { logRequest, errorLogger } = require('./middlewares/logger');
 const { PORT = 3000 } = process.env;
 
 const app = express();
+
 app.use(cors());
+
 app.use(express.json());
 
 mongoose.connect('mongodb://localhost:27017/aroundb');
@@ -59,11 +61,15 @@ app.use((err, req, res, next) => {
 
   errorLogger.error(err.message);
 
-  res.status(SERVER_ERROR).json({ message: 'Error interno del servidor' });
+  res
+    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+    .json({ message: HttpResponseMessage.SERVER_ERROR });
 });
 
 app.use((req, res) => {
-  res.status(404).json({ message: 'Recurso solicitado no encontrado' });
+  res
+    .status(HttpStatus.NOT_FOUND)
+    .json({ message: HttpResponseMessage.NOT_FOUND });
 });
 
 app.listen(PORT, () => {

@@ -140,17 +140,21 @@ function App() {
     setCardToDelete(null);
   };
 
-  /** Funciones para manejo de autorización */
-  const handleLogin = () => {
-    setLoggedIn(true);
-    setToken(token);
-  };
+  /**Condicional para renderizado de cards */
 
-  const handleSignOut = () => {
-    localStorage.removeItem("token");
-    setEmail("");
-    setLoggedIn(false);
-  };
+  const renderCards = loggedIn ? (
+    <Main
+      onEditProfileClick={handleEditProfileClick}
+      onAddPlaceClick={handleAddPlaceClick}
+      onEditAvatarClick={handleEditAvatarClick}
+      onCardClick={handleCardClick}
+      onCardLike={handleCardLikeOrDisLike}
+      onCardDelete={handleOpenConfirmation}
+      cards={cards}
+    />
+  ) : null;
+
+  /** Funciones para manejo de autorización */
 
   useEffect(() => {
     const handleCheckToken = () => {
@@ -187,6 +191,17 @@ function App() {
     handleCheckToken();
   }, [loggedIn, navigate]);
 
+  const handleLogin = (token) => {
+    setLoggedIn(true);
+    setToken(token);
+  };
+
+  const handleSignOut = () => {
+    localStorage.removeItem("token");
+    setEmail("");
+    setLoggedIn(false);
+  };
+
   return (
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
@@ -195,17 +210,7 @@ function App() {
           <Route
             path="/"
             element={
-              <ProtectedRoute loggedIn={loggedIn}>
-                <Main
-                  onEditProfileClick={handleEditProfileClick}
-                  onAddPlaceClick={handleAddPlaceClick}
-                  onEditAvatarClick={handleEditAvatarClick}
-                  onCardClick={handleCardClick}
-                  onCardLike={handleCardLikeOrDisLike}
-                  onCardDelete={handleOpenConfirmation}
-                  cards={cards}
-                />
-              </ProtectedRoute>
+              <ProtectedRoute loggedIn={loggedIn}>{renderCards}</ProtectedRoute>
             }
           />
 

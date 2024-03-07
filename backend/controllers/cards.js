@@ -1,6 +1,6 @@
 const { default: mongoose } = require('mongoose');
 const Cards = require('../models/card');
-const { NOT_FOUND, SERVER_ERROR, FORBIDDEN } = require('../utils/constants');
+const { HttpStatus, HttpResponseMessage } = require('../enums/http');
 
 module.exports.getCards = async (req, res) => {
   try {
@@ -10,8 +10,8 @@ module.exports.getCards = async (req, res) => {
   } catch (err) {
     console.error(err);
     return res
-      .status(SERVER_ERROR)
-      .json({ message: 'Error interno del servidor' });
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ message: HttpResponseMessage.SERVER_ERROR });
   }
 };
 
@@ -20,27 +20,29 @@ module.exports.createCard = async (req, res) => {
   const ownerId = req.user._id;
 
   if (!name || !link) {
-    return res.status(NOT_FOUND).json({ message: 'Información no encontrado' });
+    return res
+      .status(HttpStatus.NOT_FOUND)
+      .json({ message: HttpResponseMessage.NOT_FOUND });
   }
 
   try {
     const newCard = await Cards.create({ name, link, owner: ownerId });
 
     return res
-      .status(201)
+      .status(HttpStatus.CREATED)
       .json({ _id: newCard._id.toString(), name, link, owner: ownerId });
   } catch (err) {
     console.error(err);
 
     if (err.name === 'ValidationError') {
       return res
-        .status(NOT_FOUND)
-        .json({ message: 'Datos de tarjeta invalidos' });
+        .status(HttpStatus.NOT_FOUND)
+        .json({ message: HttpResponseMessage.NOT_FOUND });
     }
 
     return res
-      .status(SERVER_ERROR)
-      .json({ message: 'Error al crear una nueva tarjeta' });
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ message: HttpResponseMessage.SERVER_ERROR });
   }
 };
 
@@ -50,34 +52,44 @@ module.exports.deleteCard = async (req, res) => {
 
   try {
     if (!mongoose.Types.ObjectId.isValid(cardId)) {
-      return res.status(NOT_FOUND).json({ message: 'ID de tarjeta invalido' });
+      return res.status(HttpStatus.NOT_FOUND).json({
+        message: HttpResponseMessage.NOT_FOUND + ': ID de tarjeta invalido',
+      });
     }
 
     const card = await Cards.findById(cardId);
 
     if (!card) {
-      return res.status(NOT_FOUND).json({ message: 'Tarjeta no encontrada' });
+      return res.status(HttpStatus.NOT_FOUND).json({
+        message: HttpResponseMessage.NOT_FOUND + ': Tarjeta no encontrada',
+      });
     }
 
     if (card.owner.toString() !== userId) {
-      return res
-        .status(FORBIDDEN)
-        .json({ message: 'No tienes permiso para borrar esta tarjeta' });
+      return res.status(HttpStatus.FORBIDDEN).json({
+        message:
+          HttpResponseMessage.FORBIDDEN +
+          ': No tienes permiso para borrar esta tarjeta',
+      });
     }
 
     await Cards.findByIdAndDelete(cardId).orFail();
 
-    return res.status(200).json({ message: 'Tarjeta eliminada exitosamente' });
+    return res
+      .status(HttpStatus.OK)
+      .json({ message: HttpResponseMessage.SUCCESS });
   } catch (err) {
     console.error(err);
 
     if (err instanceof mongoose.Error.DocumentNotFoundError) {
-      return res.status(NOT_FOUND).json({ message: 'Tarjeta no encontrada' });
+      return res
+        .status(HttpStatus.NOT_FOUND)
+        .json({ message: HttpResponseMessage.NOT_FOUND });
     }
 
     return res
-      .status(SERVER_ERROR)
-      .json({ message: 'Error interno del servidor' });
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ message: HttpResponseMessage.SERVER_ERROR });
   }
 };
 
@@ -87,8 +99,8 @@ module.exports.likeCard = async (req, res) => {
 
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res
-        .status(FORBIDDEN)
-        .json({ message: ' ID de usuario no valido' });
+        .status(HttpStatus.FORBIDDEN)
+        .json({ message: HttpResponseMessage.FORBIDDEN });
     }
 
     await Cards.findByIdAndUpdate(
@@ -98,14 +110,14 @@ module.exports.likeCard = async (req, res) => {
     ).orFail();
 
     Cards.findById(req.params.cardId).then((card) => {
-      res.status(200).json(card);
+      res.status(HttpStatus.OK).json(card);
     });
   } catch (err) {
     console.error(err);
 
     return res
-      .status(SERVER_ERROR)
-      .json({ message: 'Error interno del servidor' });
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ message: HttpResponseMessage.SERVER_ERROR });
   }
 };
 
@@ -114,7 +126,9 @@ module.exports.disLikeCard = async (req, res) => {
     const userId = req.user._id;
 
     if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return res.status(NOT_FOUND).json({ message: 'ID de usuario no valido' });
+      return res.status(HttpStatus.NOT_FOUND).json({
+        message: HttpResponseMessage.NOT_FOUND + ': ID de usuario no valido',
+      });
     }
 
     await Cards.findByIdAndUpdate(
@@ -123,13 +137,13 @@ module.exports.disLikeCard = async (req, res) => {
       { new: true },
     ).orFail();
     Cards.findById(req.params.cardId).then((card) => {
-      res.status(200).json(card);
+      res.status(HttpStatus.OK).json(card);
     });
   } catch (err) {
     console.error(err);
 
     return res
-      .status(SERVER_ERROR)
-      .json({ message: 'Error interno del servidor' });
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ message: HttpResponseMessage.SERVER_ERROR });
   }
 };
