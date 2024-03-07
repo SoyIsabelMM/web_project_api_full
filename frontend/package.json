@@ -19,7 +19,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "scp -r ./build/*  isabelmartinez19.30@34.83.219.174:around_react_es_client"
+    "deploy": "scp -r ./build/*  isabelmartinez19.30@35.197.3.76:around_react_es_client"
   },
   "eslintConfig": {
     "extends": [
